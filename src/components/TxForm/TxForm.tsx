@@ -125,38 +125,33 @@ export function TxForm() {
 	}
 
 	async function approoveMint() {
-		// const tx = {
-		// 	validUntil: Date.now() + 1000000,
-		// 	messages: [
-		// 		{
-		// 			address: 'EQDpHi-RxVOwEnwlTwR9FRuHRmiI6oop4mExd7CndECkHRNR',
-		// 			amount: '50000000',
-		// 		},
-		// 	],
-		// };
+		const tx = {
+			validUntil: Date.now() + 1000000,
+			messages: [
+				{
+					address: 'EQDpHi-RxVOwEnwlTwR9FRuHRmiI6oop4mExd7CndECkHRNR',
+					amount: '50000000',
+				},
+			],
+		};
 
-		// const res = await sendTransaction(tx, walletsList.contents.walletsList[0]);
+		await sendTransaction(tx, walletsList.contents.walletsList[0]);
 
-		// const requestOptions = {
-		// 	method: 'POST',
-		// 	headers: { 'Content-Type': 'application/json' },
-		// 	body: JSON.stringify({ owner_addrs: wallet?.account.address }),
-		// };
-		// fetch(
-		// 	'https://cors-anywhere.herokuapp.com/https://3843-46-71-255-129.eu.ngrok.io/api/v1/generate/shield/',
-		// 	requestOptions,
-		// )
-		// 	.then((response) => response.json())
-		// 	.then((data) => {
-		// 		console.log(data['public_url']);
-		// 		sendMessage('Main Camera', 'onDeepLinkActivated', 'genlock?' + data['public_url']);
-		// 	});
-		sendMessage(
-			'Main Camera',
-			'onDeepLinkActivated',
-			'genlock?' + 'https://storage.googleapis.com/nft-game-assets/images/10.png',
-		);
-		document.getElementById('button_approve')!.style.display = 'none';
+		const requestOptions = {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ owner_addrs: wallet?.account.address }),
+		};
+		fetch(
+			'http://127.0.0.1:8000/api/v1/generate/shield/',
+			requestOptions,
+		)
+			.then((response) => response.json())
+			.then((data) => {
+				console.log(data['public_url']);
+				sendMessage('Main Camera', 'onDeepLinkActivated', 'genlock?' + data['public_url']);
+				document.getElementById('button_approve')!.style.display = 'none';
+			});
 	}
 
 	return (
