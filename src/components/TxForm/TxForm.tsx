@@ -1,4 +1,4 @@
-import { SendTransactionRequest } from '@tonconnect/sdk';
+import { SendTransactionRequest, CHAIN } from '@tonconnect/sdk';
 import { Button, Input, Modal, notification, Typography } from 'antd';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import QRCode from 'react-qr-code';
@@ -12,7 +12,7 @@ import { walletsListQuery } from 'src/state/wallets-list';
 import { isDesktop, isMobile, openLink } from 'src/utils';
 import './style.scss';
 
-const { Title } = Typography;
+const { Title, Text } = Typography;
 
 export function TxForm() {
 	const [tx, setTx] = useState<SendTransactionRequest | null>(null);
@@ -21,7 +21,16 @@ export function TxForm() {
 
 	useEffect(() => {
 		if (wallet) {
-			document.getElementById('unity')!.style.display = 'inline';
+			if (wallet.account.chain !== CHAIN.TESTNET) {
+				notification.error({
+					message: 'Mainnet is not available!',
+					description: 'Please use your testnet wallet.',
+				});
+				connector.disconnect();
+			} else {
+				document.getElementById('loading')!.style.display = 'inline';
+				document.getElementById('unity')!.style.display = 'inline';
+			}
 		}
 	}, [wallet]);
 
@@ -87,13 +96,20 @@ export function TxForm() {
 		document.getElementById('button_approve')!.style.display = 'inline';
 	}, []);
 
+	const handleLoad = useCallback(() => {
+		document.getElementById('loading')!.style.display = 'none';
+		document.getElementById('unity')!.style.visibility = 'visible';
+	}, []);
+
 	useEffect(() => {
 		addEventListener('MintAsk', handleMint);
+		addEventListener('UnityLoaded', handleLoad);
 
 		return () => {
 			removeEventListener('MintAsk', handleMint);
+			removeEventListener('UnityLoaded', handleLoad);
 		};
-	}, [addEventListener, removeEventListener, handleMint]);
+	}, [addEventListener, removeEventListener, handleMint, handleLoad]);
 
 	// We'll use a state to store the device pixel ratio.
 	const [devicePixelRatio, setDevicePixelRatio] = useState(window.devicePixelRatio);
@@ -125,6 +141,8 @@ export function TxForm() {
 	}
 
 	async function approoveMint() {
+		document.getElementById('approve_warning')!.style.display = 'inline';
+
 		const tx = {
 			validUntil: Date.now() + 1000000,
 			messages: [
@@ -151,6 +169,7 @@ export function TxForm() {
 				console.log(data['public_url']);
 				sendMessage('Main Camera', 'onDeepLinkActivated', 'genlock?' + data['public_url']);
 				document.getElementById('button_approve')!.style.display = 'none';
+				document.getElementById('approve_warning')!.style.display = 'none';
 			});
 	}
 
@@ -158,7 +177,41 @@ export function TxForm() {
 		<div className="send-tx-form">
 			<Title level={3}>Welcome to Genlock!</Title>
 
-			<div id="button_approve" style={{ display: 'none' }}>
+			<div id="loading" style={{ display: 'none', textAlign: 'center' }} >
+				<p style={{ color: 'yellow', fontSize: 'large', textAlign: 'center' }} >Loading...</p>
+				<table><tbody>
+					<tr>
+						<th><b>Key</b></th>
+						<th><b>Action</b></th>
+					</tr>
+				
+					<tr>
+						<td><img src="https://storage.googleapis.com/nft-game-assets/front/wasd.png" width="200"/></td>
+						<td>Move</td>
+					</tr>
+
+					<tr>
+						<td><img src="https://storage.googleapis.com/nft-game-assets/front/left-click.png" width="100"/></td>
+						<td>Attack</td>
+					</tr>
+
+					<tr>
+						<td><img src="https://storage.googleapis.com/nft-game-assets/front/space.png" width="200" height="auto"/></td>
+						<td>Jump</td>
+					</tr>
+
+					<tr>
+						<td><img src="https://storage.googleapis.com/nft-game-assets/front/shift.png" width="100" height="auto"/></td>
+						<td>Block</td>
+					</tr>
+				</tbody></table>
+			</div>
+
+
+			<div id="button_approve" style={{ display: 'none', textAlign: 'center' }}>
+				<div id="approve_warning" style={{ textAlign: 'center', display: 'none', color: 'yellow', fontSize: 'large' }}> 
+					<p>Open Tonkeeper and approve the transaction</p>
+				</div>
 				<Button shape="round" onClick={approoveMint}>
 					Approve transaction
 				</Button>
@@ -179,10 +232,7 @@ export function TxForm() {
 
 			{wallet ? (
 				<>
-					<Title level={4}>The wallet was successfully connected</Title>
-					<Button id="button_start" style={{ display: 'inline' }} shape="round" onClick={handleClickConnectWallet}>
-						Start game
-					</Button>
+					
 				</>
 			) : (
 				<>
@@ -205,7 +255,16 @@ export function TxForm() {
 					</Modal>
 				</>
 			)}
-			<div id="unity" style={{ width: '100%', textAlign: 'center', display: 'none' }}>
+			<div id="unity" style={{ width: '100%', textAlign: 'center', display: 'none', visibility: 'hidden' }}>
+				<div  id="button_start" style={{ display: 'inline', textAlign: 'center' }}>
+					<Title level={4}>The wallet was successfully connected</Title>
+					<br></br>
+					<Button shape="round" onClick={handleClickConnectWallet}>
+						Start game
+					</Button>
+					<br></br>
+					<br></br>
+				</div>
 				<Unity
 					unityProvider={unityProvider}
 					style={{ width: 800, height: 600, margin: 'auto' }}

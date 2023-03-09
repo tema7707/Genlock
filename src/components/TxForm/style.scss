@@ -57,3 +57,34 @@
     visibility: visible;
   }
 }
+
+#loading {
+  color: yellow;
+}
+
+table {
+  border: 1px solid;
+  border-color: white;
+  width: 600;
+  text-align: center;
+  color: white;
+  font-size: large;
+}
+
+tbody {
+  border: 1px solid;
+}
+
+tr {
+  border: 1px solid;
+}
+
+th {
+  border: 1px solid;
+  width: 300px;
+}
+
+td {
+  border-right: 1px solid;
+  padding: 30px;
+}
