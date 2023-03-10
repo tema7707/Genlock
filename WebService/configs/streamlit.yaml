@@ -1,0 +1,10 @@
+# Backend params
+backend_hostname: http://127.0.0.1:8000
+
+# Endpoints
+train_endpoint: /api/v1/train
+generate_endpoint: /api/v1/generate
+
+
+existing_model: ./collections
+collections_path: ./collections

@@ -1,0 +1,24 @@
+tokenizer:
+  pretrained_model_name_or_path: stabilityai/stable-diffusion-2-1
+  subfolder: tokenizer
+
+clip:
+  pretrained_model_name_or_path: stabilityai/stable-diffusion-2-1
+  subfolder: text_encoder
+
+vae:
+  pretrained_model_name_or_path: stabilityai/stable-diffusion-2-1
+  subfolder: vae
+
+unet:
+  pretrained_model_name_or_path: stabilityai/stable-diffusion-2-1
+  subfolder: unet
+
+feature_extractor:
+  pretrained_model_name_or_path: openai/clip-vit-base-patch32
+
+noise_scheduler:
+  beta_start: 0.00085
+  beta_end: 0.012
+  beta_schedule: scaled_linear
+  num_train_timesteps: 1000

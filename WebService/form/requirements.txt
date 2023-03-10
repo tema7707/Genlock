@@ -1,0 +1,4 @@
+streamlit==1.15.2, <=1.16
+bitsandbytes==0.37.0, <=0.38
+opencv-python==4.6.0.66, <=4.7
+numpy==1.22.4, <=1.23

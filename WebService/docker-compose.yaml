@@ -1,0 +1,17 @@
+services:
+
+  frontend:
+    ports:
+    container_name: streamlit
+    networks:
+      - testnet 
+
+  backend:
+    ports: 8000:8000
+    container_name: drf_server
+    networks:
+      - testnet
+
+networks:
+  testnet: 
+    driver: bridge

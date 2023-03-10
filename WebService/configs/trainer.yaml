@@ -1,0 +1,15 @@
+pretrained_model_name_or_path: CompVis/stable-diffusion-v1-4
+resolution: 256 # Reduce this if you want to save some memory
+# train_dataset: train_dataset
+# instance_prompt: instance_prompt
+learning_rate: 0.000001
+max_train_steps: 500 
+train_batch_size: 4
+gradient_accumulation_steps: 1 # Increase this if you want to lower memory usage
+max_grad_norm: 1.0
+gradient_checkpointing: True  # set this to True to lower the memory usage.
+use_8bit_adam: True  # use 8bit optimizer from bitsandbytes
+seed: 42
+sample_batch_size: 2
+# output_dir: shields
+
