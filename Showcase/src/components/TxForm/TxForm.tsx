@@ -134,6 +134,7 @@ export function TxForm() {
 	);
 
 	function handleClickConnectWallet() {
+		console.log(wallet?.account.address);
 		sendMessage('BlockchainAuth', 'AuthThroughBrowser', wallet?.account.address);
 		document.getElementById('button_start')!.style.display = 'none';
 	}
